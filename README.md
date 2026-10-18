@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ReSpin Studios
 
-## Getting Started
+Showcase-Website für ReSpin Studios – Objekte aus alten Schallplatten.
+Next.js (App Router, statischer Export), TypeScript, Tailwind CSS 4, Framer Motion.
 
-First, run the development server:
+## Entwickeln
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # statischer Export nach ./out
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`out/` lässt sich auf jedem statischen Hoster ausliefern.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment auf Netlify
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`netlify.toml` ist fertig konfiguriert (Build: `npm run build`, Publish: `out`, Node 22).
+Auf Netlify: *Add new site → Import an existing project → GitHub-Repo wählen → Deploy*.
+Die 404-Seite (`out/404.html`) wird automatisch verwendet.
 
-## Learn More
+## Inhalte pflegen
 
-To learn more about Next.js, take a look at the following resources:
+| Was | Wo |
+| --- | --- |
+| Produkte (Name, Kategorie, Text, Preis, Bild) | `data/products.ts` |
+| E-Mail-Adresse, Domain, Navigation | `data/site.ts` |
+| Produktbilder | `public/images/produkte/` – Platzhalter-SVGs durch Fotos ersetzen und Pfad in `data/products.ts` anpassen |
+| Werkstattfoto (Über uns) | `public/images/werkstatt-platzhalter.svg` |
+| Kennzahlen Startseite (Platzhalter) | `components/home/Impact.tsx` |
+| Impressum / Datenschutz | `app/impressum/page.tsx`, `app/datenschutz/page.tsx` |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Platzhalter-Bilder neu erzeugen: `node scripts/placeholders.mjs`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Vor dem Livegang
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Alle `[Platzhalter]` in Impressum, Datenschutz, Footer und Über uns ersetzen und rechtlich prüfen lassen.
+- Echte E-Mail-Adresse und Domain in `data/site.ts` eintragen.
+- Kennzahlen auf der Startseite durch echte Werte ersetzen und das Platzhalter-Label entfernen.

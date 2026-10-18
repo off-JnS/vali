@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="800" height="1000">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2724"/><stop offset="1" stop-color="#161514"/></linearGradient>
+  <radialGradient id="lamp" cx=".7" cy=".18" r=".7"><stop offset="0" stop-color="#d9541e" stop-opacity=".35"/><stop offset="1" stop-color="#d9541e" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="800" height="1000" fill="url(#bg)"/>
+<rect width="800" height="1000" fill="url(#lamp)"/>
+<g fill="none" stroke="#f2ede4" stroke-opacity=".06">
+  <circle cx="400" cy="520" r="120"/><circle cx="400" cy="520" r="170"/><circle cx="400" cy="520" r="220"/><circle cx="400" cy="520" r="270"/><circle cx="400" cy="520" r="320"/>
+</g>
+<rect x="0" y="760" width="800" height="240" fill="#100f0e"/>
+<rect x="0" y="760" width="800" height="3" fill="#f2ede4" fill-opacity=".08"/>
+<g transform="translate(400 760)">
+  <ellipse cx="-160" cy="0" rx="120" ry="20" fill="#0a0a0a"/><ellipse cx="-160" cy="-4" rx="120" ry="20" fill="#151515"/><ellipse cx="-160" cy="-4" rx="30" ry="5" fill="#d9541e"/>
+  <ellipse cx="150" cy="-6" rx="96" ry="16" fill="#0a0a0a"/><ellipse cx="150" cy="-12" rx="96" ry="16" fill="#151515"/><ellipse cx="150" cy="-12" rx="24" ry="4" fill="#e7d9c1"/>
+</g>
+<text x="400" y="500" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="34" fill="#f2ede4" fill-opacity=".7">Foto: Werkstatt</text>
+<text x="400" y="545" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="16" letter-spacing="3" fill="#f2ede4" fill-opacity=".4">PLATZHALTERBILD</text>
+</svg>

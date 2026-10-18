@@ -1,0 +1,13 @@
+# Netlify: statischer Export aus `next build` liegt in /out
+[build]
+  command = "npm run build"
+  publish = "out"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Gehashte Build-Dateien dürfen lange im Cache bleiben
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
