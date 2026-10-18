@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { animate, useInView, useReducedMotion } from "framer-motion";
+import { useInView, useReducedMotion } from "framer-motion";
 import { Container, Eyebrow, Section } from "../Section";
 import { Reveal } from "../Reveal";
 
@@ -22,12 +22,15 @@ function CountUp({ to, suffix }: { to: number; suffix: string }) {
 
   useEffect(() => {
     if (!inView || reduce || to === 0) return;
-    const controls = animate(0, to, {
-      duration: 2,
-      ease: [0.22, 1, 0.36, 1],
-      onUpdate: (v) => setDisplay(Math.round(v)),
+    // Kleines rAF-Tweening statt Framer-`animate` – hält die Animations-Engine aus dem Bundle
+    const start = performance.now();
+    const duration = 2000;
+    let frame = requestAnimationFrame(function tick(now) {
+      const t = Math.min((now - start) / duration, 1);
+      setDisplay(Math.round(to * (1 - Math.pow(1 - t, 4))));
+      if (t < 1) frame = requestAnimationFrame(tick);
     });
-    return () => controls.stop();
+    return () => cancelAnimationFrame(frame);
   }, [inView, reduce, to]);
 
   return (

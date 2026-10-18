@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { categories, products, type CategoryId } from "@/data/products";
 import { ProductCard } from "./ProductCard";
 
@@ -43,7 +43,7 @@ export function ProductCatalog() {
               }`}
             >
               {active && (
-                <motion.span
+                <m.span
                   layoutId="chip-bg"
                   className="absolute inset-0 rounded-full bg-ink"
                   transition={{ duration: 0.5, ease }}
@@ -61,10 +61,10 @@ export function ProductCatalog() {
         {visible.length} {visible.length === 1 ? "Stück" : "Stücke"} angezeigt
       </p>
 
-      <motion.ul layout className="mt-10 grid gap-x-6 gap-y-16 sm:grid-cols-2 md:mt-14 lg:grid-cols-3">
+      <m.ul layout className="mt-10 grid gap-x-6 gap-y-16 sm:grid-cols-2 md:mt-14 lg:grid-cols-3">
         <AnimatePresence mode="popLayout" initial={false}>
           {visible.map((product, i) => (
-            <motion.li
+            <m.li
               key={product.slug}
               layout
               initial={{ opacity: 0, y: 24, scale: 0.98 }}
@@ -73,10 +73,10 @@ export function ProductCatalog() {
               transition={{ duration: 0.6, ease, delay: i * 0.04 }}
             >
               <ProductCard product={product} priority={i < 2} />
-            </motion.li>
+            </m.li>
           ))}
         </AnimatePresence>
-      </motion.ul>
+      </m.ul>
     </>
   );
 }

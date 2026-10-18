@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 
 type RevealProps = {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ type RevealProps = {
 
 /** Sanftes Ein- und Hochgleiten, sobald das Element ins Bild kommt. */
 export function Reveal({ children, className, delay = 0, as = "div" }: RevealProps) {
-  const Component = motion[as];
+  const Component = m[as];
   return (
     <Component
       className={className}

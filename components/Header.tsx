@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { navigation, site } from "@/data/site";
 import { Logo } from "./Logo";
 
@@ -137,7 +137,7 @@ export function Header() {
 
       <AnimatePresence>
         {open && (
-          <motion.div
+          <m.div
             id="mobile-menu"
             ref={menuRef}
             data-tone="dark"
@@ -154,7 +154,7 @@ export function Header() {
             <nav aria-label="Hauptnavigation mobil" className="relative">
               <ul className="flex flex-col">
                 {navigation.map((item, i) => (
-                  <motion.li
+                  <m.li
                     key={item.href}
                     className="border-b border-line"
                     initial={{ opacity: 0, y: 24 }}
@@ -179,11 +179,11 @@ export function Header() {
                         0{i + 1}
                       </span>
                     </Link>
-                  </motion.li>
+                  </m.li>
                 ))}
               </ul>
             </nav>
-            <motion.div
+            <m.div
               className="relative mt-auto pt-12 text-sm text-muted"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -193,8 +193,8 @@ export function Header() {
               <a href={`mailto:${site.email}`} className="mt-1 inline-block py-2 text-lg text-paper underline decoration-line underline-offset-4">
                 {site.email}
               </a>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </header>

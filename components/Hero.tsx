@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  motion,
+  m,
   useAnimationFrame,
   useMotionTemplate,
   useMotionValue,
@@ -15,13 +15,15 @@ import {
 import { Vinyl, VinylSheen } from "./Vinyl";
 import { BowlBody } from "./Bowl";
 
-const ease = [0.22, 1, 0.36, 1] as const;
-
 const headlineLines = [["Jede", "Platte"], ["verdient", "eine"], ["zweite", "Runde."]];
 
 /**
  * Startbereich: Die Platte kommt aus der Hülle, dreht sich langsam und kippt
  * beim Scrollen zur Schale. Scrollgeschwindigkeit „scratcht“ die Platte mit.
+ *
+ * Das Intro (Hülle, Platte, Headline) und die Grunddrehung laufen als reines CSS
+ * (globals.css, .hero-*). Sie starten so schon beim ersten Paint und warten nicht
+ * auf JavaScript. Framer Motion kommt erst fürs Scrollen dazu.
  */
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -36,16 +38,20 @@ export function Hero() {
     if (!reduceRef.current) p.set(v);
   });
 
-  // Drehung: Grundtempo + Scrollgeschwindigkeit, wird langsamer, sobald die Schale steht
+  // Drehung: Grundtempo per CSS, dazu „Scratch“ aus der Scrollgeschwindigkeit.
+  // Sobald die Schale steht, wird beides langsamer.
   const { scrollY } = useScroll();
   const velocity = useVelocity(scrollY);
   const spinFactor = useTransform(p, [0.35, 0.78], [1, 0.08]);
-  const spin = useMotionValue(0);
+  const scratch = useMotionValue(0);
+  const spinRef = useRef<HTMLDivElement>(null);
   useAnimationFrame((_, delta) => {
     if (reduceRef.current) return;
     const dt = Math.min(delta, 64) / 1000;
     const f = spinFactor.get();
-    spin.set((spin.get() + dt * f * (22 + velocity.get() * 0.08)) % 360);
+    scratch.set((scratch.get() + dt * f * velocity.get() * 0.08) % 360);
+    const spin = spinRef.current?.getAnimations()[0];
+    if (spin && Math.abs(spin.playbackRate - f) > 0.01) spin.playbackRate = f;
   });
 
   // Endgröße der Schale relativ zur Platte – auf dem Handy größer, damit sie den Screen füllt
@@ -92,8 +98,8 @@ export function Hero() {
 
         {/* Bühne */}
         <div className="absolute left-1/2 top-[42%] aspect-square w-[min(86vw,54svh)] -translate-x-1/2 -translate-y-1/2 md:top-[45%] md:w-[min(72svh,640px)]">
-          <motion.div className="relative size-full" style={{ y: stageY, perspective: 2600 }}>
-            <motion.div
+          <m.div className="relative size-full" style={{ y: stageY, perspective: 2600 }}>
+            <m.div
               aria-hidden="true"
               className="absolute inset-[-35%] rounded-full"
               style={{
@@ -105,14 +111,14 @@ export function Hero() {
             />
 
             {/* Schatten unter der fertigen Schale */}
-            <motion.div
+            <m.div
               aria-hidden="true"
               className="absolute left-1/2 h-[12%] -translate-x-1/2 rounded-[50%] bg-black blur-xl"
               style={{ opacity: shadowOpacity, top: `${50 + bowl * 48.75 - 6}%`, width: `${bowl * 94}%` }}
             />
 
             {/* Außenwand der Schale – formt sich von oben nach unten */}
-            <motion.div
+            <m.div
               className="absolute"
               // Rand der Schale (y = 75 von 400) sitzt exakt auf der Mitte der gekippten Platte
               style={{
@@ -124,37 +130,31 @@ export function Hero() {
               }}
             >
               <BowlBody className="block w-full" />
-            </motion.div>
+            </m.div>
 
             {/* Die Platte */}
-            <motion.div
-              className="absolute inset-0"
-              style={{ rotateX: tilt, scale }}
-              initial={{ y: "9%", opacity: 0 }}
-              animate={{ y: "0%", opacity: 1 }}
-              transition={{ duration: 1.6, ease, delay: 0.25 }}
-            >
-              <motion.div className="size-full drop-shadow-[0_30px_60px_rgba(0,0,0,0.6)]" style={{ rotate: spin }}>
-                <Vinyl className="size-full" />
-              </motion.div>
-              <VinylSheen className="pointer-events-none absolute inset-0" />
-            </motion.div>
+            <div className="hero-rise absolute inset-0">
+              <m.div className="size-full" style={{ rotateX: tilt, scale }}>
+                {/* Schatten als eigene Ebene – ein Filter auf der drehenden Platte müsste jedes Frame neu rechnen */}
+                <div className="absolute inset-[1%] rounded-full shadow-[0_30px_60px_rgba(0,0,0,0.6)]" aria-hidden="true" />
+                <m.div className="size-full" style={{ rotate: scratch }}>
+                  <div ref={spinRef} className="hero-spin size-full">
+                    <Vinyl className="size-full" />
+                  </div>
+                </m.div>
+                <VinylSheen className="pointer-events-none absolute inset-0" />
+              </m.div>
+            </div>
 
             {/* Hülle mit Loch, aus der die Platte herausgleitet */}
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-[-3%]"
-              initial={{ y: "0%", opacity: 1 }}
-              animate={{ y: "110%", opacity: 0 }}
-              transition={{ duration: 1.5, ease, delay: 0.5 }}
-            >
+            <div aria-hidden="true" className="hero-sleeve pointer-events-none absolute inset-[-3%]">
               <Sleeve />
-            </motion.div>
-          </motion.div>
+            </div>
+          </m.div>
         </div>
 
         {/* Text, Teil 1 */}
-        <motion.div
+        <m.div
           className="absolute inset-x-0 bottom-[7svh] px-4 text-center md:bottom-[9svh]"
           style={{ opacity: introOpacity, y: introY }}
         >
@@ -167,34 +167,25 @@ export function Hero() {
               <span key={li} className="block md:inline">
                 {line.map((word, wi) => (
                   <span key={word} className="inline-block overflow-hidden pb-[0.08em] align-bottom">
-                    <motion.span
-                      className={`inline-block ${li === 2 ? "italic text-accent" : ""}`}
-                      initial={{ y: "105%" }}
-                      animate={{ y: "0%" }}
-                      transition={{ duration: 1.1, ease, delay: 1 + li * 0.12 + wi * 0.06 }}
+                    <span
+                      className={`hero-word inline-block ${li === 2 ? "italic text-accent" : ""}`}
+                      style={{ animationDelay: `${0.3 + li * 0.08 + wi * 0.04}s` }}
                     >
                       {word}
-                    </motion.span>
+                    </span>
                     {wi < line.length - 1 || li < headlineLines.length - 1 ? " " : null}
                   </span>
                 ))}
               </span>
             ))}
           </h1>
-          <motion.div
-            className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-5 md:mt-8"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease, delay: 1.6 }}
-          >
-            <p className="max-w-[30ch] text-sm leading-relaxed text-muted md:text-base">
-              Schalen, Schachbretter, Tische und Wandkunst – von Hand geformt aus alten Schallplatten.
-            </p>
-          </motion.div>
-        </motion.div>
+          <p className="hero-fade mx-auto mt-6 max-w-[30ch] text-sm leading-relaxed text-muted md:mt-8 md:text-base">
+            Schalen, Schachbretter, Tische und Wandkunst – von Hand geformt aus alten Schallplatten.
+          </p>
+        </m.div>
 
         {/* Text, Teil 2 */}
-        <motion.div
+        <m.div
           aria-hidden="true"
           className="pointer-events-none absolute inset-x-0 bottom-[9svh] px-4 text-center md:bottom-[11svh]"
           style={{ opacity: outroOpacity, y: outroY }}
@@ -203,18 +194,18 @@ export function Hero() {
           <p className="font-display mx-auto mt-4 max-w-[18ch] text-[clamp(1.9rem,6.5vw,3.75rem)] font-light leading-[1.05]">
             Gestern Musik. Heute deine Schale.
           </p>
-        </motion.div>
+        </m.div>
 
         {/* Randnotizen */}
-        <motion.div
+        <m.div
           className="pointer-events-none absolute inset-x-0 bottom-0 hidden items-end justify-between px-8 pb-6 text-[11px] uppercase tracking-[0.24em] text-muted md:flex"
           style={{ opacity: cueOpacity }}
           aria-hidden="true"
         >
           <span>Handgeformt aus Vinyl</span>
           <span>Seite A · 33⅓ U/min</span>
-        </motion.div>
-        <motion.div
+        </m.div>
+        <m.div
           className="pointer-events-none absolute bottom-0 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 pb-2 text-[10px] uppercase tracking-[0.3em] text-muted motion-reduce:hidden"
           style={{ opacity: cueOpacity }}
           aria-hidden="true"
@@ -222,7 +213,7 @@ export function Hero() {
           <span className="h-8 w-px overflow-hidden bg-line">
             <span className="block h-1/2 w-px animate-[scroll-cue_1.8s_ease-in-out_infinite] bg-paper" />
           </span>
-        </motion.div>
+        </m.div>
 
       </div>
     </section>

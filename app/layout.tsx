@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { preload } from "react-dom";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
@@ -9,15 +10,16 @@ import { MotionProvider } from "@/components/MotionProvider";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
-  subsets: ["latin", "latin-ext"],
-  axes: ["opsz", "SOFT"],
+  // „latin“ deckt Umlaute, ß, „“ und € ab – latin-ext würde nur Gewicht kosten
+  subsets: ["latin"],
+  axes: ["opsz"],
   style: ["normal", "italic"],
   display: "swap",
 });
 
 const inter = Inter({
   variable: "--font-inter",
-  subsets: ["latin", "latin-ext"],
+  subsets: ["latin"],
   display: "swap",
 });
 
@@ -44,6 +46,9 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
+  // Logo steckt in einer CSS-Maske – ohne Preload würde der Browser es erst spät entdecken
+  preload("/images/logo/respin-studios-logo.png", { as: "image", fetchPriority: "high" });
+
   return (
     <html lang="de" data-tone="dark" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="min-h-svh antialiased">
