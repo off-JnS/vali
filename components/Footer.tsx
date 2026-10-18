@@ -42,8 +42,8 @@ export function Footer() {
 
         <div className="mt-24 grid gap-10 border-t border-line py-10 text-sm md:grid-cols-[1.5fr_1fr_1fr] md:items-start">
           <div>
-            <Link href="/" className="group inline-block" aria-label="ReSpin Studios – zur Startseite">
-              <Logo />
+            <Link href="/" className="inline-block rounded-lg" aria-label="ReSpin Studios – zur Startseite">
+              <Logo className="h-16 md:h-20" />
             </Link>
             <p className="mt-4 max-w-xs leading-relaxed text-muted">
               Jedes Stück entsteht aus einer Platte, die es schon gab.

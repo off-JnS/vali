@@ -82,8 +82,8 @@ export function Header() {
         aria-hidden="true"
       />
       <div className={`relative mx-auto flex h-16 max-w-7xl items-center justify-between px-4 transition-colors duration-500 sm:px-6 md:h-20 lg:px-8 ${open ? "text-paper" : "text-fg"}`}>
-        <Link href="/" className="group relative z-10 -m-2 rounded-full p-2" aria-label="ReSpin Studios – zur Startseite">
-          <Logo />
+        <Link href="/" className="relative z-10 -m-2 rounded-lg p-2" aria-label="ReSpin Studios – zur Startseite">
+          <Logo className="h-9 md:h-11" />
         </Link>
 
         <nav aria-label="Hauptnavigation" className="hidden md:block">
