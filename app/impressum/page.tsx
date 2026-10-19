@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { LegalBlock, LegalPage } from "@/components/LegalPage";
 import { formatDate } from "@/lib/format";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Impressum",
-  description: "Impressum von ReSpin Studios: Anbieterkennzeichnung und Kontaktangaben.",
-  alternates: { canonical: "/impressum/" },
-};
+  description:
+    "Impressum von ReSpin Studios: Anbieterkennzeichnung und Kontaktangaben.",
+  path: "/impressum/",
+});
 
 export default function ImpressumPage() {
   return (

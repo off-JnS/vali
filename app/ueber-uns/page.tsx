@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import Image from "next/image";
 import { PageIntro } from "@/components/PageIntro";
 import { Reveal } from "@/components/Reveal";
@@ -7,12 +8,12 @@ import { Button } from "@/components/Button";
 import { ToneSeam } from "@/components/ToneSeam";
 import { LogoMark } from "@/components/Logo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Über uns",
   description:
     "Warum wir alte Schallplatten nicht wegwerfen, wie aus einer Platte eine Schale wird – und was das für die Umwelt bedeutet. Die Geschichte von ReSpin Studios.",
-  alternates: { canonical: "/ueber-uns/" },
-};
+  path: "/ueber-uns/",
+});
 
 const process = [
   { title: "Auswählen", text: "Wir prüfen jede Platte: Größe, Gewicht, Etikett. Manche sind zu schön, um sie zu formen – die bekommen ein neues Zuhause im Plattenregal." },

@@ -56,12 +56,12 @@ export function Header() {
           toggleRef.current,
           ...menuRef.current.querySelectorAll<HTMLElement>("a"),
         ].filter(Boolean) as HTMLElement[];
+        // Fokus immer selbst weiterreichen – Safari überspringt Links beim Tabben sonst
+        // und würde das Menü verlassen.
+        e.preventDefault();
         const i = focusables.indexOf(document.activeElement as HTMLElement);
-        const next = e.shiftKey ? i - 1 : i + 1;
-        if (next < 0 || next >= focusables.length) {
-          e.preventDefault();
-          focusables[(next + focusables.length) % focusables.length].focus();
-        }
+        const next = (i + (e.shiftKey ? -1 : 1) + focusables.length) % focusables.length;
+        focusables[next].focus();
       }
     };
     window.addEventListener("keydown", onKey);

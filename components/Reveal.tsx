@@ -14,6 +14,7 @@ export function Reveal({ children, className, delay = 0, as = "div" }: RevealPro
   const Component = m[as];
   return (
     <Component
+      data-reveal=""
       className={className}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}

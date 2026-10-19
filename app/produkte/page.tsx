@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { PageIntro } from "@/components/PageIntro";
 import { ProductCatalog } from "@/components/ProductCatalog";
 import { Container, Section } from "@/components/Section";
 import { site } from "@/data/site";
 import { ToneSeam } from "@/components/ToneSeam";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Produkte",
   description:
     "Schalen, Schachbretter, Beistelltische und Wandkunst aus alten Schallplatten. Jedes Stück ein handgeformtes Einzelstück – frag dein Lieblingsstück direkt per E-Mail an.",
-  alternates: { canonical: "/produkte/" },
-};
+  path: "/produkte/",
+});
 
 export default function ProduktePage() {
   return (
@@ -32,7 +33,7 @@ export default function ProduktePage() {
             Alle Stücke
           </h2>
           <ProductCatalog />
-          <aside className="mt-24 grid gap-6 rounded-[1.5rem] border border-line p-7 sm:p-10 md:grid-cols-[1fr_auto] md:items-center">
+          <div className="mt-24 grid gap-6 rounded-[1.5rem] border border-line p-7 sm:p-10 md:grid-cols-[1fr_auto] md:items-center">
             <div>
               <p className="font-display text-[clamp(1.6rem,4vw,2.4rem)] font-light leading-tight">
                 So funktioniert eine Anfrage
@@ -49,7 +50,7 @@ export default function ProduktePage() {
             >
               {site.email}
             </a>
-          </aside>
+          </div>
         </Container>
       </Section>
       <ToneSeam from="light" to="dark" />

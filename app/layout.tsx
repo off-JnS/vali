@@ -50,8 +50,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   preload("/images/logo/respin-studios-logo.png", { as: "image", fetchPriority: "high" });
 
   return (
-    <html lang="de" data-tone="dark" className={`${fraunces.variable} ${inter.variable}`}>
+    <html lang="de" data-tone="dark" data-scroll-behavior="smooth" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="min-h-svh antialiased">
+        <noscript>
+          {/* Ohne JavaScript keine Einblend-Animationen – Inhalte sofort zeigen */}
+          <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <a
           href="#inhalt"
           className="sr-only z-[70] rounded-full bg-accent px-5 py-3 font-medium text-ink focus:not-sr-only focus:fixed focus:left-4 focus:top-4"

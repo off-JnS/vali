@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { LegalBlock, LegalPage } from "@/components/LegalPage";
 import { formatDate } from "@/lib/format";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Datenschutz",
-  description: "Datenschutzerklärung von ReSpin Studios: welche Daten beim Besuch der Website und bei Anfragen per E-Mail verarbeitet werden.",
-  alternates: { canonical: "/datenschutz/" },
-};
+  description:
+    "Datenschutzerklärung von ReSpin Studios: welche Daten beim Besuch der Website und bei Anfragen per E-Mail verarbeitet werden.",
+  path: "/datenschutz/",
+});
 
 export default function DatenschutzPage() {
   return (
@@ -30,7 +32,7 @@ export default function DatenschutzPage() {
 
       <LegalBlock title="3. Hosting und Server-Logfiles">
         <p>
-          Die Website wird bei [Hosting-Anbieter, Anschrift] gehostet. Beim Aufruf der Seiten verarbeitet der Anbieter
+          Die Website wird bei Netlify, Inc. ([Anschrift ergänzen]) gehostet. Beim Aufruf der Seiten verarbeitet der Anbieter
           technisch notwendige Daten, zum Beispiel IP-Adresse, Datum und Uhrzeit, aufgerufene Seite und Browsertyp.
         </p>
         <p>

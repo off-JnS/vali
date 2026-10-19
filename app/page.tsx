@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/metadata";
 import { Hero } from "@/components/Hero";
 import { Steps } from "@/components/home/Steps";
 import { Featured } from "@/components/home/Featured";
@@ -7,12 +8,13 @@ import { Impact } from "@/components/home/Impact";
 import { Closing } from "@/components/home/Closing";
 import { ToneSeam } from "@/components/ToneSeam";
 
-export const metadata: Metadata = {
-  title: { absolute: "ReSpin Studios – Jede Platte verdient eine zweite Runde" },
+export const metadata: Metadata = pageMetadata({
+  title: "ReSpin Studios – Jede Platte verdient eine zweite Runde",
   description:
     "Wir formen alte Schallplatten von Hand zu Schalen, Schachbrettern, Beistelltischen und Wandkunst. Entdecke Einzelstücke mit Vorgeschichte.",
-  alternates: { canonical: "/" },
-};
+  path: "/",
+  absoluteTitle: true,
+});
 
 export default function Home() {
   return (
