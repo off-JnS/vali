@@ -209,6 +209,132 @@ p {
   will-change: transform;
 }
 
+/* ---------- Ladeanimation (components/Loader.tsx) ---------- */
+
+/* Ohne data-loader (kein JS, zweiter Aufruf, reduzierte Bewegung) gar nicht da */
+.loader {
+  display: none;
+}
+
+html[data-loader="on"] .loader,
+html[data-loader="exit"] .loader {
+  --loader-w: min(86vw, 54svh);
+  --loader-y: 42%;
+  --bg: var(--ink);
+  --fg: var(--paper);
+  --muted: rgb(242 237 228 / 0.68);
+  --line: rgb(242 237 228 / 0.16);
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 58;
+  overflow: hidden;
+  background-color: var(--ink);
+  color: var(--paper);
+  /* Loch in der Mitte, durch das die Seite sichtbar wird */
+  /* Radius setzt das Ladeskript pro Frame – Safari animiert Variablen in Masken nicht */
+  -webkit-mask-image: radial-gradient(circle at 50% var(--loader-y), transparent var(--loader-hole, 0px), #000 calc(var(--loader-hole, 0px) + 1px));
+  mask-image: radial-gradient(circle at 50% var(--loader-y), transparent var(--loader-hole, 0px), #000 calc(var(--loader-hole, 0px) + 1px));
+}
+
+@media (min-width: 768px) {
+  html[data-loader] .loader {
+    --loader-w: min(72svh, 640px);
+    --loader-y: 45%;
+  }
+}
+
+/* Gleiche Position und Größe wie die Platte im Hero – so geht sie nahtlos über */
+.loader-stage {
+  position: absolute;
+  left: 50%;
+  top: var(--loader-y);
+  width: var(--loader-w);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+.loader-disc {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform: scale(0.4);
+  animation: loader-in 0.6s var(--ease-out-soft) backwards;
+}
+
+@keyframes loader-in {
+  from {
+    opacity: 0;
+    transform: scale(0.34);
+  }
+}
+
+.loader-spin {
+  /* 33⅓ U/min */
+  animation: spin-slow 1.8s linear infinite;
+}
+
+.loader-arm {
+  transform-box: view-box;
+  transform-origin: 430px 20px;
+  transform: rotate(var(--loader-arm, 0deg));
+}
+
+.loader-meta {
+  position: absolute;
+  inset-inline: 0;
+  top: calc(var(--loader-y) + var(--loader-w) * 0.2 + 2.25rem);
+  text-align: center;
+  animation: hero-fade 0.6s var(--ease-out-soft) 0.15s backwards;
+}
+
+.loader-meta > span {
+  margin-inline: auto;
+}
+
+.loader-count {
+  min-width: 4ch;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+  counter-reset: pct var(--loader-pct, 0);
+}
+
+.loader-count::after {
+  content: counter(pct) "\202F%";
+}
+
+/* Abgang: Platte wächst auf Hero-Größe, Fläche öffnet sich von der Mitte */
+html[data-loader="exit"] .loader {
+  opacity: 0;
+  transition: opacity 0.35s ease 1s;
+}
+
+html[data-loader="exit"] .loader-disc {
+  opacity: 0;
+  transform: scale(1);
+  transition:
+    transform 1s cubic-bezier(0.65, 0, 0.25, 1),
+    opacity 0.6s ease 0.4s;
+}
+
+html[data-loader="exit"] .loader-tonearm {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+html[data-loader="exit"] .loader-meta {
+  opacity: 0;
+  transform: translateY(-12px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s var(--ease-out-soft);
+}
+
+/* Hero-Intro wartet, bis die Ladeanimation abtritt */
+html[data-loader="on"] :is(.hero-rise, .hero-sleeve, .hero-word, .hero-fade) {
+  animation-play-state: paused;
+}
+
 @keyframes scroll-cue {
   from {
     transform: translateY(-100%);

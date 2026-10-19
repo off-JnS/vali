@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ToneController } from "@/components/ToneController";
 import { MotionProvider } from "@/components/MotionProvider";
+import { Loader, loaderScript } from "@/components/Loader";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -47,11 +48,22 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   // Logo steckt in einer CSS-Maske – ohne Preload würde der Browser es erst spät entdecken
-  preload("/images/logo/respin-studios-logo.png", { as: "image", fetchPriority: "high" });
+  preload("/images/logo/respin-studios-logo.png", { as: "image", fetchPriority: "high", crossOrigin: "anonymous" });
 
   return (
-    <html lang="de" data-tone="dark" data-scroll-behavior="smooth" className={`${fraunces.variable} ${inter.variable}`}>
+    // suppressHydrationWarning: Das Ladeskript setzt data-loader und Style-Variablen vor React
+    <html
+      lang="de"
+      data-tone="dark"
+      data-scroll-behavior="smooth"
+      className={`${fraunces.variable} ${inter.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: loaderScript }} />
+      </head>
       <body className="min-h-svh antialiased">
+        <Loader />
         <noscript>
           {/* Ohne JavaScript keine Einblend-Animationen – Inhalte sofort zeigen */}
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
